@@ -6,4 +6,4 @@
 [![Latest Unstable Version](https://poser.pugx.org/LaravelCollective/html/v/unstable.svg)](https://packagist.org/packages/laravelcollective/html)
 [![License](https://poser.pugx.org/LaravelCollective/html/license.svg)](https://packagist.org/packages/laravelcollective/html)
 
-Official documentation for Remote (SSH) for The Laravel Framework can be dound at the [LaravelCollective](http://laravelcollective.com) website.
+Official documentation for Remote (SSH) for The Laravel Framework can be found at the [LaravelCollective](http://laravelcollective.com) website.
