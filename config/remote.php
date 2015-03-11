@@ -28,7 +28,7 @@
 				'password'  => '',
 				'key'       => '',
 				'keyphrase' => '',
-				'root'      => '/var/www',
+				'root'      => '/home/forge',
 			],
 		],
 		/*
