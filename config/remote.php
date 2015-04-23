@@ -27,8 +27,9 @@
 				'username'  => '',
 				'password'  => '',
 				'key'       => '',
+				'keytext'   => '',
 				'keyphrase' => '',
-				'root'      => '/home/forge',
+				'agent'     => '',
 			],
 		],
 		/*
