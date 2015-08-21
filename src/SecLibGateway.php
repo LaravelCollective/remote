@@ -183,7 +183,7 @@ class SecLibGateway implements GatewayInterface
      */
     public function rename($remote, $newRemote)
     {
-        $this->getConnection()->rename($remote, $newRemote);
+        return $this->getConnection()->rename($remote, $newRemote);
     }
 
     /*
