@@ -66,7 +66,7 @@ interface ConnectionInterface
     public function put($local, $remote);
 
     /**
-     * Upload a string to to the given file on the server.
+     * Upload a string to the given file on the server.
      *
      * @param string $remote
      * @param string $contents
