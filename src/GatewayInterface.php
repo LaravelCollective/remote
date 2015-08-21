@@ -68,6 +68,25 @@ interface GatewayInterface
     public function putString($remote, $contents);
 
     /**
+     * Check whether a given file exists on the server.
+     *
+     * @param string $remote
+     *
+     * @return bool
+     */
+    public function exists($remote);
+
+    /**
+     * Rename a remote file.
+     *
+     * @param string $remote
+     * @param string $newRemote
+     *
+     * @return bool
+     */
+    public function rename($remote, $newRemote);
+
+    /**
      * Delete a remote file from the server.
      *
      * @param string $remote
