@@ -42,7 +42,7 @@ interface ConnectionInterface {
 	 *
 	 * @return void
 	 */
-	public function get ( $remote, $local );
+	public function get( $remote, $local );
 
 	/**
 	 * Get the contents of a remote file.

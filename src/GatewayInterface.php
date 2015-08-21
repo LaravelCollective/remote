@@ -28,6 +28,25 @@ interface GatewayInterface {
 	public function run( $command );
 
 	/**
+	 * Download the contents of a remote file.
+	 *
+	 * @param  string $remote
+	 * @param  string $local
+	 *
+	 * @return void
+	 */
+	public function get( $remote, $local );
+
+	/**
+	 * Get the contents of a remote file.
+	 *
+	 * @param  string $remote
+	 *
+	 * @return string
+	 */
+	public function getString( $remote );
+
+	/**
 	 * Upload a local file to the server.
 	 *
 	 * @param  string $local
