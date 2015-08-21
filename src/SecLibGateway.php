@@ -166,11 +166,11 @@ class SecLibGateway implements GatewayInterface
      *
      * @param string $remote
      *
-     * @return boolean
+     * @return bool
      */
     public function delete($remote)
     {
-        return $this->getConnection()->delete( $remote );
+        return $this->getConnection()->delete($remote);
     }
 
     /**

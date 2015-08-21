@@ -72,7 +72,7 @@ interface GatewayInterface
      *
      * @param string $remote
      *
-     * @return boolean
+     * @return bool
      */
     public function delete($remote);
 
