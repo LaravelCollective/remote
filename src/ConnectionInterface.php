@@ -72,4 +72,13 @@ interface ConnectionInterface {
 	 * @return void
 	 */
 	public function putString( $remote, $contents );
+
+	/**
+	 * Delete a remote file from the server.
+	 *
+	 * @param  string $remote
+	 *
+	 * @return boolean
+	 */
+	public function delete( $remote );
 }

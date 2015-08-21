@@ -151,6 +151,17 @@ class SecLibGateway implements GatewayInterface {
 	}
 
 	/**
+	 * Delete a remote file from the server.
+	 *
+	 * @param  string $remote
+	 *
+	 * @return boolean
+	 */
+	public function delete( $remote ) {
+		return $this->getConnection()->delete( $remote );
+	}
+
+	/**
 	 * Get the next line of output from the server.
 	 *
 	 * @return string|null

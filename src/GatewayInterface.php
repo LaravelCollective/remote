@@ -67,6 +67,15 @@ interface GatewayInterface {
 	public function putString( $remote, $contents );
 
 	/**
+	 * Delete a remote file from the server.
+	 *
+	 * @param  string $remote
+	 *
+	 * @return boolean
+	 */
+	public function delete( $remote );
+
+	/**
 	 * Get the next line of output from the server.
 	 *
 	 * @return string|null
