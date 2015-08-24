@@ -213,7 +213,7 @@ class Connection implements ConnectionInterface
      */
     public function delete($remote)
     {
-        return $this->getGateway()->delete(remote);
+        return $this->getGateway()->delete($remote);
     }
 
     /**
