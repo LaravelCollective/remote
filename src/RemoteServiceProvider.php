@@ -31,6 +31,7 @@ class RemoteServiceProvider extends ServiceProvider
 
         $this->registerCommands();
     }
+
     /**
      * Register the service provider.
      *
@@ -68,6 +69,7 @@ class RemoteServiceProvider extends ServiceProvider
             return new TailCommand();
         });
     }
+
     /**
      * Get the services provided by the provider.
      *

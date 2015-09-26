@@ -2,10 +2,11 @@
 
 namespace Collective\Remote;
 
-use Crypt_RSA;
 use Illuminate\Filesystem\Filesystem;
-use Net_SFTP;
-use System_SSH_Agent;
+use phpseclib\Crypt\RSA;
+use phpseclib\Net\SFTP;
+use phpseclib\Net\SSH2;
+use phpseclib\System\SSH\Agent;
 
 class SecLibGateway implements GatewayInterface
 {
@@ -145,7 +146,7 @@ class SecLibGateway implements GatewayInterface
      */
     public function put($local, $remote)
     {
-        $this->getConnection()->put($remote, $local, NET_SFTP_LOCAL_FILE);
+        $this->getConnection()->put($remote, $local, SFTP::SOURCE_LOCAL_FILE);
     }
 
     /**
@@ -205,7 +206,7 @@ class SecLibGateway implements GatewayInterface
      */
     public function nextLine()
     {
-        $value = $this->getConnection()->_get_channel_packet(NET_SSH2_CHANNEL_EXEC);
+        $value = $this->getConnection()->_get_channel_packet(SSH2::CHANNEL_EXEC);
 
         return $value === true ? null : $value;
     }
@@ -309,21 +310,21 @@ class SecLibGateway implements GatewayInterface
     /**
      * Get a new SSH Agent instance.
      *
-     * @return \System_SSH_Agent
+     * @return \phpseclib\System\SSH\Agent
      */
     public function getAgent()
     {
-        return new System_SSH_Agent();
+        return new Agent();
     }
 
     /**
      * Get a new RSA key instance.
      *
-     * @return \Crypt_RSA
+     * @return \phpseclib\Crypt\RSA
      */
     public function getNewKey()
     {
-        return new Crypt_RSA();
+        return new RSA();
     }
 
     /**
@@ -357,9 +358,9 @@ class SecLibGateway implements GatewayInterface
     }
 
     /**
-     * Get the underlying Net_SFTP connection.
+     * Get the underlying SFTP connection.
      *
-     * @return \Net_SFTP
+     * @return \phpseclib\Net\SFTP
      */
     public function getConnection()
     {
@@ -367,6 +368,6 @@ class SecLibGateway implements GatewayInterface
             return $this->connection;
         }
 
-        return $this->connection = new Net_SFTP($this->host, $this->port);
+        return $this->connection = new SFTP($this->host, $this->port);
     }
 }
