@@ -180,6 +180,43 @@ class Connection implements ConnectionInterface
     }
 
     /**
+     * Check whether a given file exists on the server.
+     *
+     * @param string $remote
+     *
+     * @return bool
+     */
+    public function exists($remote)
+    {
+        return $this->getGateway()->exists($remote);
+    }
+
+    /**
+     * Rename a remote file.
+     *
+     * @param string $remote
+     * @param string $newRemote
+     *
+     * @return bool
+     */
+    public function rename($remote, $newRemote)
+    {
+        return $this->getGateway()->rename($remote, $newRemote);
+    }
+
+    /**
+     * Delete a remote file from the server.
+     *
+     * @param string $remote
+     *
+     * @return bool
+     */
+    public function delete($remote)
+    {
+        return $this->getGateway()->delete($remote);
+    }
+
+    /**
      * Display the given line using the default output.
      *
      * @param string $line
@@ -240,7 +277,7 @@ class Connection implements ConnectionInterface
      *
      * @throws \RuntimeException
      *
-     * @return \Illuminate\Remote\GatewayInterface
+     * @return \Collective\Remote\GatewayInterface
      */
     public function getGateway()
     {

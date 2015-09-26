@@ -162,6 +162,43 @@ class SecLibGateway implements GatewayInterface
     }
 
     /**
+     * Check whether a given file exists on the server.
+     *
+     * @param string $remote
+     *
+     * @return bool
+     */
+    public function exists($remote)
+    {
+        return $this->getConnection()->file_exists($remote);
+    }
+
+    /**
+     * Rename a remote file.
+     *
+     * @param string $remote
+     * @param string $newRemote
+     *
+     * @return bool
+     */
+    public function rename($remote, $newRemote)
+    {
+        return $this->getConnection()->rename($remote, $newRemote);
+    }
+
+    /*
+     * Delete a remote file from the server.
+     *
+     * @param string $remote
+     *
+     * @return bool
+     */
+    public function delete($remote)
+    {
+        return $this->getConnection()->delete($remote);
+    }
+
+    /**
      * Get the next line of output from the server.
      *
      * @return string|null
