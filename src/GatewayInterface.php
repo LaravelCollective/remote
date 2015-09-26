@@ -38,6 +38,7 @@ interface GatewayInterface
      * @return void
      */
     public function get($remote, $local);
+
     /**
      * Get the contents of a remote file.
      *
