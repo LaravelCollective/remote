@@ -1,4 +1,5 @@
 <?php
+
     use Mockery as m;
 
 class RemoteSecLibGatewayTest extends PHPUnit_Framework_TestCase
