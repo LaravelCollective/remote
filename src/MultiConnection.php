@@ -97,7 +97,6 @@ class MultiConnection implements ConnectionInterface
         }
     }
 
-
     /**
      * Upload a local file to the server.
      *
