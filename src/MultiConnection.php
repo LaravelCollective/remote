@@ -69,6 +69,36 @@ class MultiConnection implements ConnectionInterface
     }
 
     /**
+     * Download the contents of a remote file.
+     *
+     * @param string $remote
+     * @param string $local
+     *
+     * @return void
+     */
+    public function get($remote, $local)
+    {
+        foreach ($this->connections as $connection) {
+            $connection->get($remote, $local);
+        }
+    }
+
+    /**
+     * Get the contents of a remote file.
+     *
+     * @param string $remote
+     *
+     * @return string
+     */
+    public function getString($remote)
+    {
+        foreach ($this->connections as $connection) {
+            $connection->getString($remote);
+        }
+    }
+
+
+    /**
      * Upload a local file to the server.
      *
      * @param string $local
