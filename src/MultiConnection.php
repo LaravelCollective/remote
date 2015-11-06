@@ -33,6 +33,7 @@ class MultiConnection implements ConnectionInterface
      */
     public function define($task, $commands)
     {
+        /** @var Connection $connection */
         foreach ($this->connections as $connection) {
             $connection->define($task, $commands);
         }
@@ -48,6 +49,7 @@ class MultiConnection implements ConnectionInterface
      */
     public function task($task, Closure $callback = null)
     {
+        /** @var Connection $connection */
         foreach ($this->connections as $connection) {
             $connection->task($task, $callback);
         }
@@ -63,6 +65,7 @@ class MultiConnection implements ConnectionInterface
      */
     public function run($commands, Closure $callback = null)
     {
+        /** @var Connection $connection */
         foreach ($this->connections as $connection) {
             $connection->run($commands, $callback);
         }
@@ -78,6 +81,7 @@ class MultiConnection implements ConnectionInterface
      */
     public function get($remote, $local)
     {
+        /** @var Connection $connection */
         foreach ($this->connections as $connection) {
             $connection->get($remote, $local);
         }
@@ -92,6 +96,7 @@ class MultiConnection implements ConnectionInterface
      */
     public function getString($remote)
     {
+        /** @var Connection $connection */
         foreach ($this->connections as $connection) {
             $connection->getString($remote);
         }
@@ -107,6 +112,7 @@ class MultiConnection implements ConnectionInterface
      */
     public function put($local, $remote)
     {
+        /** @var Connection $connection */
         foreach ($this->connections as $connection) {
             $connection->put($local, $remote);
         }
@@ -122,6 +128,7 @@ class MultiConnection implements ConnectionInterface
      */
     public function putString($remote, $contents)
     {
+        /** @var Connection $connection */
         foreach ($this->connections as $connection) {
             $connection->putString($remote, $contents);
         }
@@ -136,6 +143,7 @@ class MultiConnection implements ConnectionInterface
      */
     public function exists($remote)
     {
+        /** @var Connection $connection */
         foreach ($this->connections as $connection) {
             $connection->exists($remote);
         }
@@ -151,6 +159,7 @@ class MultiConnection implements ConnectionInterface
      */
     public function rename($remote, $newRemote)
     {
+        /** @var Connection $connection */
         foreach ($this->connections as $connection) {
             $connection->rename($remote, $newRemote);
         }
@@ -165,6 +174,7 @@ class MultiConnection implements ConnectionInterface
      */
     public function delete($remote)
     {
+        /** @var Connection $connection */
         foreach ($this->connections as $connection) {
             $connection->delete($remote);
         }

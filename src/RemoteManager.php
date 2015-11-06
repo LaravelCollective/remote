@@ -105,7 +105,7 @@ class RemoteManager
     {
         $this->setOutput($connection = new Connection(
 
-            $name, $config['host'], $config['username'], $this->getAuth($config)
+            $name, $config['host'], $config['username'], $this->getAuth($config), null, $config['timeout']
 
         ));
 
