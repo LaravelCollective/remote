@@ -24,11 +24,11 @@ class SecLibGateway implements GatewayInterface
      */
     protected $port = 22;
 
-    /**
-     * The timeout for commands.
-     *
-     * @var int
-     */
+     /**
+      * The timeout for commands.
+      *
+      * @var int
+      */
      protected $timeout = 10;
 
     /**
@@ -203,6 +203,7 @@ class SecLibGateway implements GatewayInterface
      *
      * @return bool
      */
+
     public function delete($remote)
     {
         return $this->getConnection()->delete($remote);

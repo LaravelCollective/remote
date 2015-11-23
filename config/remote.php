@@ -35,7 +35,7 @@ return [
             'keytext'   => '',
             'keyphrase' => '',
             'agent'     => '',
-            'timeout'   => 10
+            'timeout'   => 10,
         ],
     ],
 

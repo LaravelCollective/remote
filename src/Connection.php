@@ -54,12 +54,12 @@ class Connection implements ConnectionInterface
     /**
      * Create a new SSH connection instance.
      *
-     * @param string $name
-     * @param string $host
-     * @param string $username
-     * @param array  $auth
+     * @param string                              $name
+     * @param string                              $host
+     * @param string                              $username
+     * @param array                               $auth
      * @param \Collective\Remote\GatewayInterface $gateway
-     * @param int $timeout
+     * @param int                                 $timeout
      * @param
      */
     public function __construct($name, $host, $username, array $auth, GatewayInterface $gateway = null, $timeout = 10)
