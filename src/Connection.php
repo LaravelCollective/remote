@@ -54,19 +54,20 @@ class Connection implements ConnectionInterface
     /**
      * Create a new SSH connection instance.
      *
-     * @param string $name
-     * @param string $host
-     * @param string $username
-     * @param array  $auth
-     * @param  \Collective\Remote\GatewayInterface
+     * @param string                              $name
+     * @param string                              $host
+     * @param string                              $username
+     * @param array                               $auth
+     * @param \Collective\Remote\GatewayInterface $gateway
+     * @param int                                 $timeout
      * @param
      */
-    public function __construct($name, $host, $username, array $auth, GatewayInterface $gateway = null)
+    public function __construct($name, $host, $username, array $auth, GatewayInterface $gateway = null, $timeout = 10)
     {
         $this->name = $name;
         $this->host = $host;
         $this->username = $username;
-        $this->gateway = $gateway ?: new SecLibGateway($host, $auth, new Filesystem());
+        $this->gateway = $gateway ?: new SecLibGateway($host, $auth, new Filesystem(), $timeout);
     }
 
     /**

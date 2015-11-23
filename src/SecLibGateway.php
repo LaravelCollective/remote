@@ -24,6 +24,13 @@ class SecLibGateway implements GatewayInterface
      */
     protected $port = 22;
 
+     /**
+      * The timeout for commands.
+      *
+      * @var int
+      */
+     protected $timeout = 10;
+
     /**
      * The authentication credential set.
      *
@@ -51,11 +58,13 @@ class SecLibGateway implements GatewayInterface
      * @param string                            $host
      * @param array                             $auth
      * @param \Illuminate\Filesystem\Filesystem $files
+     * @param int                               $timeout
      */
-    public function __construct($host, array $auth, Filesystem $files)
+    public function __construct($host, array $auth, Filesystem $files, $timeout = 10)
     {
         $this->auth = $auth;
         $this->files = $files;
+        $this->timeout = $timeout;
         $this->setHostAndPort($host);
     }
 
@@ -194,6 +203,7 @@ class SecLibGateway implements GatewayInterface
      *
      * @return bool
      */
+
     public function delete($remote)
     {
         return $this->getConnection()->delete($remote);
@@ -368,6 +378,6 @@ class SecLibGateway implements GatewayInterface
             return $this->connection;
         }
 
-        return $this->connection = new SFTP($this->host, $this->port);
+        return $this->connection = new SFTP($this->host, $this->port, $this->timeout);
     }
 }
