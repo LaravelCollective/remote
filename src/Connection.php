@@ -59,8 +59,7 @@ class Connection implements ConnectionInterface
      * @param string                              $username
      * @param array                               $auth
      * @param \Collective\Remote\GatewayInterface $gateway
-     * @param mixed                               $timeout
-     * @param
+     * @param int                                 $timeout
      */
     public function __construct($name, $host, $username, array $auth, GatewayInterface $gateway = null, $timeout = 10)
     {

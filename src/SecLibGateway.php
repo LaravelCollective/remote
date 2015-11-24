@@ -93,7 +93,7 @@ class SecLibGateway implements GatewayInterface
      * and will run indefinitely. setTimeout() makes it so it'll timeout.
      * Setting $timeout to false or 0 will mean there is no timeout.
      *
-     * @param mixed $timeout
+     * @param int $timeout
      */
     protected function setTimeout($timeout)
     {
