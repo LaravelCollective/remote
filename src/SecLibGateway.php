@@ -25,6 +25,13 @@ class SecLibGateway implements GatewayInterface
     protected $port = 22;
 
     /**
+     * The timeout for commands.
+     *
+     * @var int
+     */
+    protected $timeout = 10;
+
+    /**
      * The authentication credential set.
      *
      * @var array
@@ -41,7 +48,7 @@ class SecLibGateway implements GatewayInterface
     /**
      * The SecLib connection instance.
      *
-     * @var \Net_SFTP
+     * @var \phpseclib\Net\SFTP
      */
     protected $connection;
 
@@ -51,12 +58,14 @@ class SecLibGateway implements GatewayInterface
      * @param string                            $host
      * @param array                             $auth
      * @param \Illuminate\Filesystem\Filesystem $files
+     * @param int                               $timeout
      */
-    public function __construct($host, array $auth, Filesystem $files)
+    public function __construct($host, array $auth, Filesystem $files, $timeout)
     {
         $this->auth = $auth;
         $this->files = $files;
         $this->setHostAndPort($host);
+        $this->setTimeout($timeout);
     }
 
     /**
@@ -75,6 +84,20 @@ class SecLibGateway implements GatewayInterface
 
             $this->port = (int) $this->port;
         }
+    }
+
+    /**
+     * Set timeout.
+     *
+     * $ssh->exec('ping 127.0.0.1'); on a Linux host will never return
+     * and will run indefinitely. setTimeout() makes it so it'll timeout.
+     * Setting $timeout to false or 0 will mean there is no timeout.
+     *
+     * @param int $timeout
+     */
+    protected function setTimeout($timeout)
+    {
+        $this->timeout = (int) $timeout;
     }
 
     /**
@@ -194,6 +217,7 @@ class SecLibGateway implements GatewayInterface
      *
      * @return bool
      */
+
     public function delete($remote)
     {
         return $this->getConnection()->delete($remote);
@@ -216,7 +240,7 @@ class SecLibGateway implements GatewayInterface
      *
      * @throws \InvalidArgumentException
      *
-     * @return \Crypt_RSA|\System_SSH_Agent|string
+     * @return \phpseclib\Crypt\RSA|\phpseclib\System\SSH\Agent|string
      */
     protected function getAuthForLogin()
     {
@@ -258,7 +282,7 @@ class SecLibGateway implements GatewayInterface
      *
      * @param array $auth
      *
-     * @return \Crypt_RSA
+     * @return \phpseclib\Crypt\RSA
      */
     protected function loadRsaKey(array $auth)
     {
@@ -288,7 +312,7 @@ class SecLibGateway implements GatewayInterface
      *
      * @param array $auth
      *
-     * @return \Crypt_RSA
+     * @return \phpseclib\Crypt\RSA
      */
     protected function getKey(array $auth)
     {
@@ -358,6 +382,16 @@ class SecLibGateway implements GatewayInterface
     }
 
     /**
+     * Get timeout.
+     *
+     * @return int
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
      * Get the underlying SFTP connection.
      *
      * @return \phpseclib\Net\SFTP
@@ -368,6 +402,6 @@ class SecLibGateway implements GatewayInterface
             return $this->connection;
         }
 
-        return $this->connection = new SFTP($this->host, $this->port);
+        return $this->connection = new SFTP($this->host, $this->port, $this->timeout);
     }
 }

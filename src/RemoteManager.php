@@ -103,9 +103,13 @@ class RemoteManager
      */
     protected function makeConnection($name, array $config)
     {
+        $host = isset($config['host']) ? $config['host'] : null;
+        $username = isset($config['username']) ? $config['username'] : null;
+        $timeout = isset($config['timeout']) ? $config['timeout'] : 10;
+
         $this->setOutput($connection = new Connection(
 
-            $name, $config['host'], $config['username'], $this->getAuth($config)
+            $name, $host, $username, $this->getAuth($config), null, $timeout
 
         ));
 
