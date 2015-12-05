@@ -10,7 +10,6 @@ use phpseclib\System\SSH\Agent;
 
 class SecLibGateway implements GatewayInterface
 {
-
     /**
      * The host name of the server.
      *
@@ -53,7 +52,6 @@ class SecLibGateway implements GatewayInterface
      */
     protected $connection;
 
-
     /**
      * Create a new gateway implementation.
      *
@@ -64,12 +62,11 @@ class SecLibGateway implements GatewayInterface
      */
     public function __construct($host, array $auth, Filesystem $files, $timeout)
     {
-        $this->auth  = $auth;
+        $this->auth = $auth;
         $this->files = $files;
         $this->setHostAndPort($host);
         $this->setTimeout($timeout);
     }
-
 
     /**
      * Set the host and port from a full host string.
@@ -80,15 +77,14 @@ class SecLibGateway implements GatewayInterface
      */
     protected function setHostAndPort($host)
     {
-        if ( ! str_contains($host, ':')) {
+        if (!str_contains($host, ':')) {
             $this->host = $host;
         } else {
-            list( $this->host, $this->port ) = explode(':', $host);
+            list($this->host, $this->port) = explode(':', $host);
 
             $this->port = (int) $this->port;
         }
     }
-
 
     /**
      * Connect to the SSH server.
@@ -102,13 +98,11 @@ class SecLibGateway implements GatewayInterface
         return $this->getConnection()->login($username, $this->getAuthForLogin());
     }
 
-
     /**
      * Get the underlying SFTP connection.
      *
      * @return \phpseclib\Net\SFTP
      */
-
     public function getConnection()
     {
         if ($this->connection) {
@@ -118,9 +112,7 @@ class SecLibGateway implements GatewayInterface
         return $this->connection = new SFTP($this->host, $this->port);
     }
 
-
     /**
-     *
      * /**
      * Get the authentication object for login.
      *
@@ -144,13 +136,12 @@ class SecLibGateway implements GatewayInterface
         // If a plain password was set on the auth credentials, we will just return
         // that as it can be used to connect to the server. This will be used if
         // there is no RSA key and it gets specified in the credential arrays.
-        elseif (isset( $this->auth['password'] )) {
+        elseif (isset($this->auth['password'])) {
             return $this->auth['password'];
         }
 
         throw new \InvalidArgumentException('Password / key is required.');
     }
-
 
     /**
      * Determine if the SSH Agent should provide an RSA key.
@@ -159,9 +150,8 @@ class SecLibGateway implements GatewayInterface
      */
     protected function useAgent()
     {
-        return isset( $this->auth['agent'] ) && $this->auth['agent'] === true;
+        return isset($this->auth['agent']) && $this->auth['agent'] === true;
     }
-
 
     /**
      * Get a new SSH Agent instance.
@@ -173,7 +163,6 @@ class SecLibGateway implements GatewayInterface
         return new Agent();
     }
 
-
     /**
      * Determine if an RSA key is configured.
      *
@@ -181,11 +170,10 @@ class SecLibGateway implements GatewayInterface
      */
     protected function hasRsaKey()
     {
-        $hasKey = ( isset( $this->auth['key'] ) && trim($this->auth['key']) != '' );
+        $hasKey = (isset($this->auth['key']) && trim($this->auth['key']) != '');
 
-        return $hasKey || ( isset( $this->auth['keytext'] ) && trim($this->auth['keytext']) != '' );
+        return $hasKey || (isset($this->auth['keytext']) && trim($this->auth['keytext']) != '');
     }
-
 
     /**
      * Load the RSA key instance.
@@ -201,7 +189,6 @@ class SecLibGateway implements GatewayInterface
         return $key;
     }
 
-
     /**
      * Create a new RSA key instance.
      *
@@ -216,7 +203,6 @@ class SecLibGateway implements GatewayInterface
         return $key;
     }
 
-
     /**
      * Get a new RSA key instance.
      *
@@ -227,7 +213,6 @@ class SecLibGateway implements GatewayInterface
         return new RSA();
     }
 
-
     /**
      * Read the contents of the RSA key.
      *
@@ -237,13 +222,12 @@ class SecLibGateway implements GatewayInterface
      */
     protected function readRsaKey(array $auth)
     {
-        if (isset( $auth['key'] )) {
+        if (isset($auth['key'])) {
             return $this->files->get($auth['key']);
         }
 
         return $auth['keytext'];
     }
-
 
     /**
      * Get timeout.
@@ -255,7 +239,6 @@ class SecLibGateway implements GatewayInterface
         return $this->timeout;
     }
 
-
     /*
      * Delete a remote file from the server.
      *
@@ -263,7 +246,6 @@ class SecLibGateway implements GatewayInterface
      *
      * @return bool
      */
-
 
     /**
      * Set timeout.
@@ -279,7 +261,6 @@ class SecLibGateway implements GatewayInterface
         $this->timeout = (int) $timeout;
     }
 
-
     /**
      * Determine if the gateway is connected.
      *
@@ -289,7 +270,6 @@ class SecLibGateway implements GatewayInterface
     {
         return $this->getConnection()->isConnected();
     }
-
 
     /**
      * Run a command against the server (non-blocking).
@@ -302,7 +282,6 @@ class SecLibGateway implements GatewayInterface
     {
         $this->getConnection()->exec($command, false);
     }
-
 
     /**
      * Download the contents of a remote file.
@@ -317,7 +296,6 @@ class SecLibGateway implements GatewayInterface
         $this->getConnection()->get($remote, $local);
     }
 
-
     /**
      * Get the contents of a remote file.
      *
@@ -329,7 +307,6 @@ class SecLibGateway implements GatewayInterface
     {
         return $this->getConnection()->get($remote);
     }
-
 
     /**
      * Upload a local file to the server.
@@ -344,7 +321,6 @@ class SecLibGateway implements GatewayInterface
         $this->getConnection()->put($remote, $local, SFTP::SOURCE_LOCAL_FILE);
     }
 
-
     /**
      * Upload a string to to the given file on the server.
      *
@@ -358,7 +334,6 @@ class SecLibGateway implements GatewayInterface
         $this->getConnection()->put($remote, $contents);
     }
 
-
     /**
      * Check whether a given file exists on the server.
      *
@@ -370,7 +345,6 @@ class SecLibGateway implements GatewayInterface
     {
         return $this->getConnection()->file_exists($remote);
     }
-
 
     /**
      * Rename a remote file.
@@ -385,12 +359,10 @@ class SecLibGateway implements GatewayInterface
         return $this->getConnection()->rename($remote, $newRemote);
     }
 
-
     public function delete($remote)
     {
         return $this->getConnection()->delete($remote);
     }
-
 
     /**
      * Get the next line of output from the server.
@@ -404,7 +376,6 @@ class SecLibGateway implements GatewayInterface
         return $value === true ? null : $value;
     }
 
-
     /**
      * Get the exit status of the last command.
      *
@@ -415,7 +386,6 @@ class SecLibGateway implements GatewayInterface
         return $this->getConnection()->getExitStatus();
     }
 
-
     /**
      * Get the host used by the gateway.
      *
@@ -425,7 +395,6 @@ class SecLibGateway implements GatewayInterface
     {
         return $this->host;
     }
-
 
     /**
      * Get the port used by the gateway.
