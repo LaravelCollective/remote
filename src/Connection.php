@@ -9,7 +9,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Connection implements ConnectionInterface
 {
-
     /**
      * The SSH gateway implementation.
      *
@@ -43,7 +42,7 @@ class Connection implements ConnectionInterface
      *
      * @var array
      */
-    protected $tasks = [ ];
+    protected $tasks = [];
 
     /**
      * The output implementation for the connection.
@@ -51,7 +50,6 @@ class Connection implements ConnectionInterface
      * @var \Symfony\Component\Console\Output\OutputInterface
      */
     protected $output;
-
 
     /**
      * Create a new SSH connection instance.
@@ -65,12 +63,11 @@ class Connection implements ConnectionInterface
      */
     public function __construct($name, $host, $username, array $auth, GatewayInterface $gateway = null, $timeout = 10)
     {
-        $this->name     = $name;
-        $this->host     = $host;
+        $this->name = $name;
+        $this->host = $host;
         $this->username = $username;
-        $this->gateway  = $gateway ?: new SecLibGateway($host, $auth, new Filesystem(), timeout);
+        $this->gateway = $gateway ?: new SecLibGateway($host, $auth, new Filesystem(), timeout);
     }
-
 
     /**
      * Define a set of commands as a task.
@@ -85,7 +82,6 @@ class Connection implements ConnectionInterface
         $this->tasks[$task] = $commands;
     }
 
-
     /**
      * Run a task against the connection.
      *
@@ -96,11 +92,10 @@ class Connection implements ConnectionInterface
      */
     public function task($task, Closure $callback = null)
     {
-        if (isset( $this->tasks[$task] )) {
+        if (isset($this->tasks[$task])) {
             $this->run($this->tasks[$task], $callback);
         }
     }
-
 
     /**
      * Run a set of commands against the connection.
@@ -133,7 +128,6 @@ class Connection implements ConnectionInterface
         }
     }
 
-
     /**
      * Get the gateway implementation.
      *
@@ -143,13 +137,12 @@ class Connection implements ConnectionInterface
      */
     public function getGateway()
     {
-        if ( ! $this->gateway->connected() && ! $this->gateway->connect($this->username)) {
+        if (!$this->gateway->connected() && !$this->gateway->connect($this->username)) {
             throw new \RuntimeException('Unable to connect to remote server.');
         }
 
         return $this->gateway;
     }
-
 
     /**
      * Get the display callback for the connection.
@@ -160,7 +153,7 @@ class Connection implements ConnectionInterface
      */
     protected function getCallback($callback)
     {
-        if ( ! is_null($callback)) {
+        if (!is_null($callback)) {
             return $callback;
         }
 
@@ -168,7 +161,6 @@ class Connection implements ConnectionInterface
             $this->display($line);
         };
     }
-
 
     /**
      * Display the given line using the default output.
@@ -179,13 +171,12 @@ class Connection implements ConnectionInterface
      */
     public function display($line)
     {
-        $server = $this->username . '@' . $this->host;
+        $server = $this->username.'@'.$this->host;
 
-        $lead = '<comment>[' . $server . ']</comment> <info>(' . $this->name . ')</info>';
+        $lead = '<comment>['.$server.']</comment> <info>('.$this->name.')</info>';
 
-        $this->getOutput()->writeln($lead . ' ' . $line);
+        $this->getOutput()->writeln($lead.' '.$line);
     }
-
 
     /**
      * Get the output implementation for the connection.
@@ -201,7 +192,6 @@ class Connection implements ConnectionInterface
         return $this->output;
     }
 
-
     /**
      * Set the output implementation.
      *
@@ -214,7 +204,6 @@ class Connection implements ConnectionInterface
         $this->output = $output;
     }
 
-
     /**
      * Format the given command set.
      *
@@ -226,7 +215,6 @@ class Connection implements ConnectionInterface
     {
         return is_array($commands) ? implode(' && ', $commands) : $commands;
     }
-
 
     /**
      * Download the contents of a remote file.
@@ -241,7 +229,6 @@ class Connection implements ConnectionInterface
         $this->getGateway()->get($remote, $local);
     }
 
-
     /**
      * Get the contents of a remote file.
      *
@@ -253,7 +240,6 @@ class Connection implements ConnectionInterface
     {
         return $this->getGateway()->getString($remote);
     }
-
 
     /**
      * Upload a local file to the server.
@@ -268,7 +254,6 @@ class Connection implements ConnectionInterface
         $this->getGateway()->put($local, $remote);
     }
 
-
     /**
      * Upload a string to to the given file on the server.
      *
@@ -282,7 +267,6 @@ class Connection implements ConnectionInterface
         $this->getGateway()->putString($remote, $contents);
     }
 
-
     /**
      * Check whether a given file exists on the server.
      *
@@ -294,7 +278,6 @@ class Connection implements ConnectionInterface
     {
         return $this->getGateway()->exists($remote);
     }
-
 
     /**
      * Rename a remote file.
@@ -309,7 +292,6 @@ class Connection implements ConnectionInterface
         return $this->getGateway()->rename($remote, $newRemote);
     }
 
-
     /**
      * Delete a remote file from the server.
      *
@@ -321,7 +303,6 @@ class Connection implements ConnectionInterface
     {
         return $this->getGateway()->delete($remote);
     }
-
 
     /**
      * Get the exit status of the last command.

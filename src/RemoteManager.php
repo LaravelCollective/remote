@@ -8,14 +8,12 @@ use Symfony\Component\Console\Output\NullOutput;
 
 class RemoteManager
 {
-
     /**
      * The application instance.
      *
      * @var \Collective\Foundation\Application
      */
     protected $app;
-
 
     /**
      * Create a new remote manager instance.
@@ -26,7 +24,6 @@ class RemoteManager
     {
         $this->app = $app;
     }
-
 
     /**
      * Get a remote connection instance.
@@ -44,7 +41,6 @@ class RemoteManager
         }
     }
 
-
     /**
      * Get a remote connection instance.
      *
@@ -61,7 +57,6 @@ class RemoteManager
         return $this->resolve($name ?: $this->getDefaultConnection());
     }
 
-
     /**
      * Resolve a multiple connection instance.
      *
@@ -71,9 +66,8 @@ class RemoteManager
      */
     public function multiple(array $names)
     {
-        return new MultiConnection(array_map([ $this, 'resolve' ], $names));
+        return new MultiConnection(array_map([$this, 'resolve'], $names));
     }
-
 
     /**
      * Resolve a remote connection instance.
@@ -86,7 +80,6 @@ class RemoteManager
     {
         return $this->makeConnection($name, $this->getConfig($name));
     }
-
 
     /**
      * Make a new connection instance.
@@ -107,7 +100,6 @@ class RemoteManager
         return $connection;
     }
 
-
     /**
      * Set the output implementation on the connection.
      *
@@ -122,7 +114,6 @@ class RemoteManager
         $connection->setOutput($output);
     }
 
-
     /**
      * Format the appropriate authentication array payload.
      *
@@ -134,19 +125,18 @@ class RemoteManager
      */
     protected function getAuth(array $config)
     {
-        if (isset( $config['agent'] ) && $config['agent'] === true) {
-            return [ 'agent' => true ];
-        } elseif (isset( $config['key'] ) && trim($config['key']) != '') {
-            return [ 'key' => $config['key'], 'keyphrase' => $config['keyphrase'] ];
-        } elseif (isset( $config['keytext'] ) && trim($config['keytext']) != '') {
-            return [ 'keytext' => $config['keytext'] ];
-        } elseif (isset( $config['password'] )) {
-            return [ 'password' => $config['password'] ];
+        if (isset($config['agent']) && $config['agent'] === true) {
+            return ['agent' => true];
+        } elseif (isset($config['key']) && trim($config['key']) != '') {
+            return ['key' => $config['key'], 'keyphrase' => $config['keyphrase']];
+        } elseif (isset($config['keytext']) && trim($config['keytext']) != '') {
+            return ['keytext' => $config['keytext']];
+        } elseif (isset($config['password'])) {
+            return ['password' => $config['password']];
         }
 
         throw new \InvalidArgumentException('Password / key is required.');
     }
-
 
     /**
      * Get the configuration for a remote server.
@@ -159,15 +149,14 @@ class RemoteManager
      */
     protected function getConfig($name)
     {
-        $config = $this->app['config']['remote.connections.' . $name];
+        $config = $this->app['config']['remote.connections.'.$name];
 
-        if ( ! is_null($config)) {
+        if (!is_null($config)) {
             return $config;
         }
 
         throw new \InvalidArgumentException("Remote connection [$name] not defined.");
     }
-
 
     /**
      * Get the default connection name.
@@ -179,7 +168,6 @@ class RemoteManager
         return $this->app['config']['remote.default'];
     }
 
-
     /**
      * Get a connection group instance by name.
      *
@@ -189,9 +177,8 @@ class RemoteManager
      */
     public function group($name)
     {
-        return $this->connection($this->app['config']['remote.groups.' . $name]);
+        return $this->connection($this->app['config']['remote.groups.'.$name]);
     }
-
 
     /**
      * Set the default connection name.
@@ -205,7 +192,6 @@ class RemoteManager
         $this->app['config']['remote.default'] = $name;
     }
 
-
     /**
      * Dynamically pass methods to the default connection.
      *
@@ -216,6 +202,6 @@ class RemoteManager
      */
     public function __call($method, $parameters)
     {
-        return call_user_func_array([ $this->connection(), $method ], $parameters);
+        return call_user_func_array([$this->connection(), $method], $parameters);
     }
 }
