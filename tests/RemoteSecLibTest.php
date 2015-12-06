@@ -33,7 +33,7 @@ class RemoteSecLibGatewayTest extends PHPUnit_Framework_TestCase
                 '127.0.0.1:22',
                 ['username' => 'taylor', 'keytext' => 'keystuff'],
                 $files,
-            10,
+                10,
             ])->makePartial();
         $gateway->shouldReceive('getConnection')->andReturn(m::mock('StdClass'));
         $gateway->shouldReceive('getNewKey')->andReturn($key = m::mock('StdClass'));
@@ -51,7 +51,7 @@ class RemoteSecLibGatewayTest extends PHPUnit_Framework_TestCase
                 '127.0.0.1:22',
                 ['username' => 'taylor', 'key' => 'keypath', 'keyphrase' => 'keyphrase'],
                 $files,
-            10,
+                10,
             ])->makePartial();
         $gateway->shouldReceive('getConnection')->andReturn(m::mock('StdClass'));
 

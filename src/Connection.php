@@ -66,7 +66,7 @@ class Connection implements ConnectionInterface
         $this->name = $name;
         $this->host = $host;
         $this->username = $username;
-        $this->gateway = $gateway ?: new SecLibGateway($host, $auth, new Filesystem(), timeout);
+        $this->gateway = $gateway ?: new SecLibGateway($host, $auth, new Filesystem(), $timeout);
     }
 
     /**
