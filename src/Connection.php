@@ -54,19 +54,19 @@ class Connection implements ConnectionInterface
     /**
      * Create a new SSH connection instance.
      *
-     * @param string $name
-     * @param string $host
-     * @param string $username
-     * @param array  $auth
-     * @param  \Collective\Remote\GatewayInterface
-     * @param
+     * @param string                              $name
+     * @param string                              $host
+     * @param string                              $username
+     * @param array                               $auth
+     * @param \Collective\Remote\GatewayInterface $gateway
+     * @param int                                 $timeout
      */
-    public function __construct($name, $host, $username, array $auth, GatewayInterface $gateway = null)
+    public function __construct($name, $host, $username, array $auth, GatewayInterface $gateway = null, $timeout = 10)
     {
         $this->name = $name;
         $this->host = $host;
         $this->username = $username;
-        $this->gateway = $gateway ?: new SecLibGateway($host, $auth, new Filesystem());
+        $this->gateway = $gateway ?: new SecLibGateway($host, $auth, new Filesystem(), $timeout);
     }
 
     /**
@@ -79,7 +79,7 @@ class Connection implements ConnectionInterface
      */
     public function define($task, $commands)
     {
-        $this->tasks[ $task ] = $commands;
+        $this->tasks[$task] = $commands;
     }
 
     /**
@@ -92,8 +92,8 @@ class Connection implements ConnectionInterface
      */
     public function task($task, Closure $callback = null)
     {
-        if (isset($this->tasks[ $task ])) {
-            return $this->run($this->tasks[ $task ], $callback);
+        if (isset($this->tasks[$task])) {
+            $this->run($this->tasks[$task], $callback);
         }
     }
 
@@ -126,6 +126,94 @@ class Connection implements ConnectionInterface
 
             call_user_func($callback, $line, $this);
         }
+    }
+
+    /**
+     * Get the gateway implementation.
+     *
+     * @throws \RuntimeException
+     *
+     * @return \Collective\Remote\GatewayInterface
+     */
+    public function getGateway()
+    {
+        if (!$this->gateway->connected() && !$this->gateway->connect($this->username)) {
+            throw new \RuntimeException('Unable to connect to remote server.');
+        }
+
+        return $this->gateway;
+    }
+
+    /**
+     * Get the display callback for the connection.
+     *
+     * @param \Closure|null $callback
+     *
+     * @return \Closure
+     */
+    protected function getCallback($callback)
+    {
+        if (!is_null($callback)) {
+            return $callback;
+        }
+
+        return function ($line) {
+            $this->display($line);
+        };
+    }
+
+    /**
+     * Display the given line using the default output.
+     *
+     * @param string $line
+     *
+     * @return void
+     */
+    public function display($line)
+    {
+        $server = $this->username.'@'.$this->host;
+
+        $lead = '<comment>['.$server.']</comment> <info>('.$this->name.')</info>';
+
+        $this->getOutput()->writeln($lead.' '.$line);
+    }
+
+    /**
+     * Get the output implementation for the connection.
+     *
+     * @return \Symfony\Component\Console\Output\OutputInterface
+     */
+    public function getOutput()
+    {
+        if (is_null($this->output)) {
+            $this->output = new NullOutput();
+        }
+
+        return $this->output;
+    }
+
+    /**
+     * Set the output implementation.
+     *
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return void
+     */
+    public function setOutput(OutputInterface $output)
+    {
+        $this->output = $output;
+    }
+
+    /**
+     * Format the given command set.
+     *
+     * @param string|array $commands
+     *
+     * @return string
+     */
+    protected function formatCommands($commands)
+    {
+        return is_array($commands) ? implode(' && ', $commands) : $commands;
     }
 
     /**
@@ -217,52 +305,6 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Display the given line using the default output.
-     *
-     * @param string $line
-     *
-     * @return void
-     */
-    public function display($line)
-    {
-        $server = $this->username.'@'.$this->host;
-
-        $lead = '<comment>['.$server.']</comment> <info>('.$this->name.')</info>';
-
-        $this->getOutput()->writeln($lead.' '.$line);
-    }
-
-    /**
-     * Format the given command set.
-     *
-     * @param string|array $commands
-     *
-     * @return string
-     */
-    protected function formatCommands($commands)
-    {
-        return is_array($commands) ? implode(' && ', $commands) : $commands;
-    }
-
-    /**
-     * Get the display callback for the connection.
-     *
-     * @param \Closure|null $callback
-     *
-     * @return \Closure
-     */
-    protected function getCallback($callback)
-    {
-        if (!is_null($callback)) {
-            return $callback;
-        }
-
-        return function ($line) {
-            $this->display($line);
-        };
-    }
-
-    /**
      * Get the exit status of the last command.
      *
      * @return int|bool
@@ -270,47 +312,5 @@ class Connection implements ConnectionInterface
     public function status()
     {
         return $this->gateway->status();
-    }
-
-    /**
-     * Get the gateway implementation.
-     *
-     * @throws \RuntimeException
-     *
-     * @return \Collective\Remote\GatewayInterface
-     */
-    public function getGateway()
-    {
-        if (!$this->gateway->connected() && !$this->gateway->connect($this->username)) {
-            throw new \RuntimeException('Unable to connect to remote server.');
-        }
-
-        return $this->gateway;
-    }
-
-    /**
-     * Get the output implementation for the connection.
-     *
-     * @return \Symfony\Component\Console\Output\OutputInterface
-     */
-    public function getOutput()
-    {
-        if (is_null($this->output)) {
-            $this->output = new NullOutput();
-        }
-
-        return $this->output;
-    }
-
-    /**
-     * Set the output implementation.
-     *
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
-     * @return void
-     */
-    public function setOutput(OutputInterface $output)
-    {
-        $this->output = $output;
     }
 }

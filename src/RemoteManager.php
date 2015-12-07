@@ -58,18 +58,6 @@ class RemoteManager
     }
 
     /**
-     * Get a connection group instance by name.
-     *
-     * @param string $name
-     *
-     * @return \Collective\Remote\ConnectionInterface
-     */
-    public function group($name)
-    {
-        return $this->connection($this->app['config'][ 'remote.groups.'.$name ]);
-    }
-
-    /**
      * Resolve a multiple connection instance.
      *
      * @param array $names
@@ -103,9 +91,11 @@ class RemoteManager
      */
     protected function makeConnection($name, array $config)
     {
+        $timeout = isset($config['timeout']) ? $config['timeout'] : 10;
+
         $this->setOutput($connection = new Connection(
 
-            $name, $config['host'], $config['username'], $this->getAuth($config)
+            $name, $config['host'], $config['username'], $this->getAuth($config), null, $timeout
 
         ));
 
@@ -161,7 +151,7 @@ class RemoteManager
      */
     protected function getConfig($name)
     {
-        $config = $this->app['config'][ 'remote.connections.'.$name ];
+        $config = $this->app['config']['remote.connections.'.$name];
 
         if (!is_null($config)) {
             return $config;
@@ -178,6 +168,18 @@ class RemoteManager
     public function getDefaultConnection()
     {
         return $this->app['config']['remote.default'];
+    }
+
+    /**
+     * Get a connection group instance by name.
+     *
+     * @param string $name
+     *
+     * @return \Collective\Remote\ConnectionInterface
+     */
+    public function group($name)
+    {
+        return $this->connection($this->app['config']['remote.groups.'.$name]);
     }
 
     /**

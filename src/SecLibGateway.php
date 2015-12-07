@@ -25,6 +25,13 @@ class SecLibGateway implements GatewayInterface
     protected $port = 22;
 
     /**
+     * The timeout for commands.
+     *
+     * @var int
+     */
+    protected $timeout = 10;
+
+    /**
      * The authentication credential set.
      *
      * @var array
@@ -51,12 +58,14 @@ class SecLibGateway implements GatewayInterface
      * @param string                            $host
      * @param array                             $auth
      * @param \Illuminate\Filesystem\Filesystem $files
+     * @param                                   $timeout
      */
-    public function __construct($host, array $auth, Filesystem $files)
+    public function __construct($host, array $auth, Filesystem $files, $timeout)
     {
         $this->auth = $auth;
         $this->files = $files;
         $this->setHostAndPort($host);
+        $this->setTimeout($timeout);
     }
 
     /**
@@ -87,6 +96,161 @@ class SecLibGateway implements GatewayInterface
     public function connect($username)
     {
         return $this->getConnection()->login($username, $this->getAuthForLogin());
+    }
+
+    /**
+     * Get the underlying SFTP connection.
+     *
+     * @return \phpseclib\Net\SFTP
+     */
+    public function getConnection()
+    {
+        if ($this->connection) {
+            return $this->connection;
+        }
+
+        return $this->connection = new SFTP($this->host, $this->port, $this->timeout);
+    }
+
+    /**
+     * /**
+     * Get the authentication object for login.
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return \Crypt_RSA|\System_SSH_Agent|string
+     */
+    protected function getAuthForLogin()
+    {
+        if ($this->useAgent()) {
+            return $this->getAgent();
+        }
+
+        // If a "key" was specified in the auth credentials, we will load it into a
+        // secure RSA key instance, which will be used to connect to the servers
+        // in place of a password, and avoids the developer specifying a pass.
+        elseif ($this->hasRsaKey()) {
+            return $this->loadRsaKey($this->auth);
+        }
+
+        // If a plain password was set on the auth credentials, we will just return
+        // that as it can be used to connect to the server. This will be used if
+        // there is no RSA key and it gets specified in the credential arrays.
+        elseif (isset($this->auth['password'])) {
+            return $this->auth['password'];
+        }
+
+        throw new \InvalidArgumentException('Password / key is required.');
+    }
+
+    /**
+     * Determine if the SSH Agent should provide an RSA key.
+     *
+     * @return bool
+     */
+    protected function useAgent()
+    {
+        return isset($this->auth['agent']) && $this->auth['agent'] === true;
+    }
+
+    /**
+     * Get a new SSH Agent instance.
+     *
+     * @return \phpseclib\System\SSH\Agent
+     */
+    public function getAgent()
+    {
+        return new Agent();
+    }
+
+    /**
+     * Determine if an RSA key is configured.
+     *
+     * @return bool
+     */
+    protected function hasRsaKey()
+    {
+        $hasKey = (isset($this->auth['key']) && trim($this->auth['key']) != '');
+
+        return $hasKey || (isset($this->auth['keytext']) && trim($this->auth['keytext']) != '');
+    }
+
+    /**
+     * Load the RSA key instance.
+     *
+     * @param array $auth
+     *
+     * @return \Crypt_RSA
+     */
+    protected function loadRsaKey(array $auth)
+    {
+        with($key = $this->getKey($auth))->loadKey($this->readRsaKey($auth));
+
+        return $key;
+    }
+
+    /**
+     * Create a new RSA key instance.
+     *
+     * @param array $auth
+     *
+     * @return \Crypt_RSA
+     */
+    protected function getKey(array $auth)
+    {
+        with($key = $this->getNewKey())->setPassword(array_get($auth, 'keyphrase'));
+
+        return $key;
+    }
+
+    /**
+     * Get a new RSA key instance.
+     *
+     * @return \phpseclib\Crypt\RSA
+     */
+    public function getNewKey()
+    {
+        return new RSA();
+    }
+
+    /**
+     * Read the contents of the RSA key.
+     *
+     * @param array $auth
+     *
+     * @return string
+     */
+    protected function readRsaKey(array $auth)
+    {
+        if (isset($auth['key'])) {
+            return $this->files->get($auth['key']);
+        }
+
+        return $auth['keytext'];
+    }
+
+    /**
+     * Get timeout.
+     *
+     * @return int
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * Set timeout.
+     *
+     * $ssh->exec('ping 127.0.0.1'); on a Linux host will never return
+     * and will run indefinitely. setTimeout() makes it so it'll timeout.
+     * Setting $timeout to false or 0 will mean there is no timeout.
+     *
+     * @param int $timeout
+     */
+    protected function setTimeout($timeout)
+    {
+        $this->timeout = (int) $timeout;
     }
 
     /**
@@ -187,14 +351,13 @@ class SecLibGateway implements GatewayInterface
         return $this->getConnection()->rename($remote, $newRemote);
     }
 
-    /*
+    /**
      * Delete a remote file from the server.
      *
      * @param string $remote
      *
      * @return bool
      */
-
     public function delete($remote)
     {
         return $this->getConnection()->delete($remote);
@@ -210,122 +373,6 @@ class SecLibGateway implements GatewayInterface
         $value = $this->getConnection()->_get_channel_packet(SSH2::CHANNEL_EXEC);
 
         return $value === true ? null : $value;
-    }
-
-    /**
-     * Get the authentication object for login.
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return \Crypt_RSA|\System_SSH_Agent|string
-     */
-    protected function getAuthForLogin()
-    {
-        if ($this->useAgent()) {
-            return $this->getAgent();
-        }
-
-        // If a "key" was specified in the auth credentials, we will load it into a
-        // secure RSA key instance, which will be used to connect to the servers
-        // in place of a password, and avoids the developer specifying a pass.
-        elseif ($this->hasRsaKey()) {
-            return $this->loadRsaKey($this->auth);
-        }
-
-        // If a plain password was set on the auth credentials, we will just return
-        // that as it can be used to connect to the server. This will be used if
-        // there is no RSA key and it gets specified in the credential arrays.
-        elseif (isset($this->auth['password'])) {
-            return $this->auth['password'];
-        }
-
-        throw new \InvalidArgumentException('Password / key is required.');
-    }
-
-    /**
-     * Determine if an RSA key is configured.
-     *
-     * @return bool
-     */
-    protected function hasRsaKey()
-    {
-        $hasKey = (isset($this->auth['key']) && trim($this->auth['key']) != '');
-
-        return $hasKey || (isset($this->auth['keytext']) && trim($this->auth['keytext']) != '');
-    }
-
-    /**
-     * Load the RSA key instance.
-     *
-     * @param array $auth
-     *
-     * @return \Crypt_RSA
-     */
-    protected function loadRsaKey(array $auth)
-    {
-        with($key = $this->getKey($auth))->loadKey($this->readRsaKey($auth));
-
-        return $key;
-    }
-
-    /**
-     * Read the contents of the RSA key.
-     *
-     * @param array $auth
-     *
-     * @return string
-     */
-    protected function readRsaKey(array $auth)
-    {
-        if (isset($auth['key'])) {
-            return $this->files->get($auth['key']);
-        }
-
-        return $auth['keytext'];
-    }
-
-    /**
-     * Create a new RSA key instance.
-     *
-     * @param array $auth
-     *
-     * @return \Crypt_RSA
-     */
-    protected function getKey(array $auth)
-    {
-        with($key = $this->getNewKey())->setPassword(array_get($auth, 'keyphrase'));
-
-        return $key;
-    }
-
-    /**
-     * Determine if the SSH Agent should provide an RSA key.
-     *
-     * @return bool
-     */
-    protected function useAgent()
-    {
-        return isset($this->auth['agent']) && $this->auth['agent'] === true;
-    }
-
-    /**
-     * Get a new SSH Agent instance.
-     *
-     * @return \phpseclib\System\SSH\Agent
-     */
-    public function getAgent()
-    {
-        return new Agent();
-    }
-
-    /**
-     * Get a new RSA key instance.
-     *
-     * @return \phpseclib\Crypt\RSA
-     */
-    public function getNewKey()
-    {
-        return new RSA();
     }
 
     /**
@@ -356,19 +403,5 @@ class SecLibGateway implements GatewayInterface
     public function getPort()
     {
         return $this->port;
-    }
-
-    /**
-     * Get the underlying SFTP connection.
-     *
-     * @return \phpseclib\Net\SFTP
-     */
-    public function getConnection()
-    {
-        if ($this->connection) {
-            return $this->connection;
-        }
-
-        return $this->connection = new SFTP($this->host, $this->port);
     }
 }

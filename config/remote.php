@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default'     => 'production',
+    'default' => 'production',
 
     /*
     |--------------------------------------------------------------------------
@@ -35,6 +35,7 @@ return [
             'keytext'   => '',
             'keyphrase' => '',
             'agent'     => '',
+            'timeout'   => 10,
         ],
     ],
 
@@ -49,7 +50,7 @@ return [
     |
     */
 
-    'groups'      => [
+    'groups' => [
         'web' => ['production'],
     ],
 
