@@ -109,7 +109,7 @@ class SecLibGateway implements GatewayInterface
             return $this->connection;
         }
 
-        return $this->connection = new SFTP($this->host, $this->port);
+        return $this->connection = new SFTP($this->host, $this->port, $this->timeout);
     }
 
     /**
@@ -239,14 +239,6 @@ class SecLibGateway implements GatewayInterface
         return $this->timeout;
     }
 
-    /*
-     * Delete a remote file from the server.
-     *
-     * @param string $remote
-     *
-     * @return bool
-     */
-
     /**
      * Set timeout.
      *
@@ -359,6 +351,13 @@ class SecLibGateway implements GatewayInterface
         return $this->getConnection()->rename($remote, $newRemote);
     }
 
+    /**
+     * Delete a remote file from the server.
+     *
+     * @param string $remote
+     *
+     * @return bool
+     */
     public function delete($remote)
     {
         return $this->getConnection()->delete($remote);
