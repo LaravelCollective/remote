@@ -39,7 +39,7 @@ class RemoteServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bindShared('remote', function ($app) {
+        $this->app->singleton('remote', function ($app) {
             return new RemoteManager($app);
         });
     }
