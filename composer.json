@@ -1,12 +1,12 @@
 {
   "name": "laravelcollective/remote",
   "description": "Remote for The Laravel Framework.",
-  "keywords": [
-    "framework",
-    "laravel",
-    "remote"
-  ],
   "license": "MIT",
+  "homepage": "http://laravelcollective.com",
+  "support": {
+    "issues": "https://github.com/LaravelCollective/remote/issues",
+    "source": "https://github.com/LaravelCollective/remote"
+  },
   "authors": [
     {
       "name": "Taylor Otwell",
