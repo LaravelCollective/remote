@@ -7,13 +7,14 @@ use Illuminate\Support\ServiceProvider;
 
 class RemoteServiceProvider extends ServiceProvider
 {
+
     /**
      * The commands to be registered.
      *
      * @var array
      */
     protected $commands = [
-        'Tail' => 'command.tail',
+      'Tail' => 'command.tail',
     ];
 
     /**
@@ -28,11 +29,23 @@ class RemoteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__.'/../config/remote.php' => config_path('remote.php'),
-        ]);
+        if (! $this->isLumen()) {
+            $this->publishes([
+              __DIR__ . '/../config/remote.php' => config_path('remote.php'),
+            ]);
+        }
 
         $this->registerCommands();
+    }
+
+    /**
+     * Check if package is running under Lumen app
+     *
+     * @return bool
+     */
+    protected function isLumen()
+    {
+        return str_contains($this->app->version(), 'Lumen') === true;
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Collective\Remote;
 
-use Illuminate\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
 
@@ -11,16 +11,16 @@ class RemoteManager
     /**
      * The application instance.
      *
-     * @var \Collective\Foundation\Application
+     * @var \Illuminate\Contracts\Container\Container
      */
     protected $app;
 
     /**
      * Create a new remote manager instance.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param \Illuminate\Contracts\Container\Container $app
      */
-    public function __construct(Application $app)
+    public function __construct(Container $app)
     {
         $this->app = $app;
     }
