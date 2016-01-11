@@ -25,7 +25,7 @@ class RemoteServiceProvider extends ServiceProvider
     protected $defer = true;
 
     /**
-     * Boot the Service Provider
+     * Boot the Service Provider.
      */
     public function boot()
     {
