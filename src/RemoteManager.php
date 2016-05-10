@@ -58,6 +58,18 @@ class RemoteManager
     }
 
     /**
+     * Make a new connection instance based on passed params.
+     *
+     * @param array  $config
+     *
+     * @return \Collective\Remote\Connection
+     */
+    public function connect($config)
+    {
+        return $this->makeConnection($config['host'], $config);
+    }
+
+    /**
      * Resolve a multiple connection instance.
      *
      * @param array $names
