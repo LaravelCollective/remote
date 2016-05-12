@@ -7,7 +7,6 @@ use Illuminate\Support\ServiceProvider;
 
 class RemoteServiceProvider extends ServiceProvider
 {
-
     /**
      * The commands to be registered.
      *
