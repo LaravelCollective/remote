@@ -60,7 +60,7 @@ class RemoteManager
     /**
      * Make a new connection instance based on passed params.
      *
-     * @param array  $config
+     * @param array $config
      *
      * @return \Collective\Remote\Connection
      */
