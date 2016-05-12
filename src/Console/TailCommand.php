@@ -126,7 +126,7 @@ class TailCommand extends Command
      */
     protected function getRemote($connection)
     {
-        return $this->laravel[ 'remote' ]->connection($connection);
+        return $this->laravel['remote']->connection($connection);
     }
 
     /**
@@ -160,7 +160,7 @@ class TailCommand extends Command
      */
     protected function getRoot($connection)
     {
-        return $this->laravel[ 'config' ][ 'remote.connections.'.$connection.'.root' ];
+        return $this->laravel['config']['remote.connections.'.$connection.'.root'];
     }
 
     /**
