@@ -32,11 +32,5 @@
         "psr-4": {
             "Collective\\Remote\\": "src/"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "5.3-dev"
-        }
-    },
-    "minimum-stability": "dev"
+    }
 }
