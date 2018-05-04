@@ -1,6 +1,6 @@
 {
     "name": "laravelcollective/remote",
-    "description": "Remote for The Laravel Framework.",
+    "description": "Remote SSH access for The Laravel Framework.",
     "license": "MIT",
     "homepage": "http://laravelcollective.com",
     "support": {
