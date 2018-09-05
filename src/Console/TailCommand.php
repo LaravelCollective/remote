@@ -10,11 +10,14 @@ use Symfony\Component\Process\Process;
 class TailCommand extends Command
 {
     /**
-     * The console command name.
+     * The console command signature.
      *
      * @var string
      */
-    protected $name = 'tail';
+    protected $signature = 'tail 
+        {connection? : The remote connection name} 
+        {--path= : The fully qualified path to the log file.} 
+        {--lines=20 : The number of lines to tail.}';
 
     /**
      * The console command description.
@@ -28,7 +31,7 @@ class TailCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         $path = $this->getPath($this->argument('connection'));
 
@@ -161,30 +164,5 @@ class TailCommand extends Command
     protected function getRoot($connection)
     {
         return $this->laravel['config']['remote.connections.'.$connection.'.root'];
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [
-            ['connection', InputArgument::OPTIONAL, 'The remote connection name'],
-        ];
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['path', null, InputOption::VALUE_OPTIONAL, 'The fully qualified path to the log file.'],
-            ['lines', null, InputOption::VALUE_OPTIONAL, 'The number of lines to tail.', 20],
-        ];
     }
 }

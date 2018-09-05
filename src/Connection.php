@@ -80,6 +80,8 @@ class Connection implements ConnectionInterface
     public function define($task, $commands)
     {
         $this->tasks[$task] = $commands;
+
+        return $this;
     }
 
     /**
