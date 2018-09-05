@@ -19,18 +19,18 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "illuminate/support": "5.5.x-dev",
-        "illuminate/filesystem": "5.6.x-dev",
+        "illuminate/support": "5.7.*",
+        "illuminate/filesystem": "5.7.*",
         "phpseclib/phpseclib": "^2.0"
     },
     "require-dev": {
-        "illuminate/console": "5.6.x-dev",
+        "illuminate/console": "5.7.*",
         "mockery/mockery": "~0.9.4",
         "phpunit/phpunit": "~5.5"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "5.6-dev"
+            "dev-master": "5.7-dev"
         },
         "laravel": {
             "providers": [
