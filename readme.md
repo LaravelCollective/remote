@@ -7,3 +7,4 @@
 [![License](https://poser.pugx.org/LaravelCollective/remote/license.svg)](https://packagist.org/packages/laravelcollective/remote)
 
 Official documentation for Remote (SSH) for The Laravel Framework can be found at the [LaravelCollective](http://laravelcollective.com) website.
+   . 
