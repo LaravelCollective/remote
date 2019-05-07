@@ -3,6 +3,7 @@
 namespace Collective\Remote;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use phpseclib\Crypt\RSA;
 use phpseclib\Net\SFTP;
 use phpseclib\Net\SSH2;
@@ -77,7 +78,7 @@ class SecLibGateway implements GatewayInterface
      */
     protected function setHostAndPort($host)
     {
-        if (!str_contains($host, ':')) {
+        if (!Str::contains($host, ':')) {
             $this->host = $host;
         } else {
             list($this->host, $this->port) = explode(':', $host);
