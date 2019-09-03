@@ -2,11 +2,13 @@
 
 namespace Collective\Remote;
 
-use Illuminate\Filesystem\Filesystem;
-use phpseclib\Crypt\RSA;
 use phpseclib\Net\SFTP;
 use phpseclib\Net\SSH2;
+use phpseclib\Crypt\RSA;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use phpseclib\System\SSH\Agent;
+use Illuminate\Filesystem\Filesystem;
 
 class SecLibGateway implements GatewayInterface
 {
@@ -77,7 +79,7 @@ class SecLibGateway implements GatewayInterface
      */
     protected function setHostAndPort($host)
     {
-        if (!str_contains($host, ':')) {
+        if (!Str::contains($host, ':')) {
             $this->host = $host;
         } else {
             list($this->host, $this->port) = explode(':', $host);
@@ -198,7 +200,7 @@ class SecLibGateway implements GatewayInterface
      */
     protected function getKey(array $auth)
     {
-        with($key = $this->getNewKey())->setPassword(array_get($auth, 'keyphrase'));
+        with($key = $this->getNewKey())->setPassword(Arr::get($auth, 'keyphrase'));
 
         return $key;
     }
