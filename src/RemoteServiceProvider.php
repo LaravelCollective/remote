@@ -4,6 +4,7 @@ namespace Collective\Remote;
 
 use Collective\Remote\Console\TailCommand;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class RemoteServiceProvider extends ServiceProvider
 {
@@ -44,7 +45,7 @@ class RemoteServiceProvider extends ServiceProvider
      */
     protected function isLumen()
     {
-        return str_contains($this->app->version(), 'Lumen') === true;
+        return Str::contains($this->app->version(), 'Lumen') === true;
     }
 
     /**
