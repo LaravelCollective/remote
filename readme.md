@@ -1,4 +1,4 @@
-# Remote (SSH)
+![LaravelCollective Remote](LaravelCollectiveRemote-banner.png)
 
 [![Build Status](https://travis-ci.org/LaravelCollective/remote.svg?branch=master)](https://travis-ci.org/LaravelCollective/remote)
 [![Total Downloads](https://poser.pugx.org/LaravelCollective/remote/downloads)](https://packagist.org/packages/laravelcollective/remote)
