@@ -103,16 +103,21 @@ class Connection implements ConnectionInterface
      * Run a set of commands against the connection.
      *
      * @param string|array $commands
-     * @param \Closure     $callback
+     * @param \Closure $callback
      *
+     * @param int|null $timeout
      * @return void
      */
-    public function run($commands, Closure $callback = null)
+    public function run($commands, Closure $callback = null, int $timeout = null)
     {
         // First, we will initialize the SSH gateway, and then format the commands so
         // they can be run. Once we have the commands formatted and the server is
         // ready to go we will just fire off these commands against the server.
         $gateway = $this->getGateway();
+
+        if ($timeout != null) {
+            $gateway->setTimeout($timeout);
+        }
 
         $callback = $this->getCallback($callback);
 
@@ -314,5 +319,12 @@ class Connection implements ConnectionInterface
     public function status()
     {
         return $this->gateway->status();
+    }
+
+    public function setTimeout($timeout) {
+
+        $this->getGateway()->setTimeout($timeout);
+
+        return $this;
     }
 }
