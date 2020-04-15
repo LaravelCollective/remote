@@ -16,6 +16,13 @@ class RemoteSecLibGatewayTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(22, $gateway->getPort());
     }
 
+    public function testHostAndPortSetCorrectlyWithIpv6()
+    {
+        $gateway = $this->getGateway('3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f:22');
+        $this->assertEquals('3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f', $gateway->getHost());
+        $this->assertEquals(22, $gateway->getPort());
+    }
+
     public function testConnectProperlyCallsLoginWithAuth()
     {
         $gateway = $this->getGateway();
@@ -43,12 +50,12 @@ class RemoteSecLibGatewayTest extends PHPUnit_Framework_TestCase
         $gateway->connect('taylor');
     }
 
-    public function getGateway()
+    public function getGateway($host = '127.0.0.1:22')
     {
         $files = m::mock('Illuminate\Filesystem\Filesystem');
         $files->shouldReceive('get')->with('keypath')->andReturn('keystuff');
         $gateway = m::mock('Collective\Remote\SecLibGateway', [
-                '127.0.0.1:22',
+                $host,
                 ['username' => 'taylor', 'key' => 'keypath', 'keyphrase' => 'keyphrase'],
                 $files,
                 10,
