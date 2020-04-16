@@ -16,11 +16,60 @@ class RemoteSecLibGatewayTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(22, $gateway->getPort());
     }
 
+    public function testHostAndPortSetCorrectlyWithoutPort()
+    {
+        $gateway = $this->getGateway('127.0.0.1');
+        $this->assertEquals('127.0.0.1', $gateway->getHost());
+        $this->assertEquals(22, $gateway->getPort());
+    }
+
+    public function testHostAndPortSetCorrectlyNonstandardPort()
+    {
+        $gateway = $this->getGateway('127.0.0.1:2222');
+        $this->assertEquals('127.0.0.1', $gateway->getHost());
+        $this->assertEquals(2222, $gateway->getPort());
+    }
+
     public function testHostAndPortSetCorrectlyWithIpv6()
     {
         $gateway = $this->getGateway('3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f:22');
-        $this->assertEquals('3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f', $gateway->getHost());
+        $this->assertEquals('[3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f]', $gateway->getHost());
         $this->assertEquals(22, $gateway->getPort());
+    }
+
+    public function testHostAndPortSetCorrectlyWithIpv6InBrackets()
+    {
+        $gateway = $this->getGateway('[3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f]:22');
+        $this->assertEquals('[3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f]', $gateway->getHost());
+        $this->assertEquals(22, $gateway->getPort());
+    }
+
+    public function testHostAndPortSetCorrectlyWithIpv6WithoutPort()
+    {
+        $gateway = $this->getGateway('3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f');
+        $this->assertEquals('[3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f]', $gateway->getHost());
+        $this->assertEquals(22, $gateway->getPort());
+    }
+
+    public function testHostAndPortSetCorrectlyWithIpv6InBracketsWithoutPort()
+    {
+        $gateway = $this->getGateway('[3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f]');
+        $this->assertEquals('[3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f]', $gateway->getHost());
+        $this->assertEquals(22, $gateway->getPort());
+    }
+
+    public function testHostAndPortSetCorrectlyWithIpv6NonstandardPort()
+    {
+        $gateway = $this->getGateway('3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f:2222');
+        $this->assertEquals('[3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f]', $gateway->getHost());
+        $this->assertEquals(2222, $gateway->getPort());
+    }
+
+    public function testHostAndPortSetCorrectlyWithIpv6InBracketsNonstandardPort()
+    {
+        $gateway = $this->getGateway('[3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f]:2222');
+        $this->assertEquals('[3b71:2304:142e:cd5e:4ab3:439b:bc29:b59f]', $gateway->getHost());
+        $this->assertEquals(2222, $gateway->getPort());
     }
 
     public function testConnectProperlyCallsLoginWithAuth()
