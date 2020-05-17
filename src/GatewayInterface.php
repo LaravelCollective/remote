@@ -109,4 +109,12 @@ interface GatewayInterface
      * @return int|bool
      */
     public function status();
+
+    /**
+     * Set timeout
+     *
+     * @param $timeout
+     * @return mixed
+     */
+    public function setTimeout($timeout);
 }

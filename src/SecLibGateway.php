@@ -256,9 +256,13 @@ class SecLibGateway implements GatewayInterface
      *
      * @param int $timeout
      */
-    protected function setTimeout($timeout)
+    public function setTimeout($timeout)
     {
         $this->timeout = (int) $timeout;
+
+        if ($this->connection) {
+            $this->connection->setTimeout($this->timeout);
+        }
     }
 
     /**
