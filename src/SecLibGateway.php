@@ -79,12 +79,18 @@ class SecLibGateway implements GatewayInterface
      */
     protected function setHostAndPort($host)
     {
-        if (!Str::contains($host, ':')) {
-            $this->host = $host;
-        } else {
-            list($this->host, $this->port) = explode(':', $host);
+        $host = Str::replaceFirst('[', '', $host);
+        $host = Str::replaceLast(']', '', $host);
 
-            $this->port = (int) $this->port;
+        $this->host = $host;
+
+        if (!filter_var($host, FILTER_VALIDATE_IP) && Str::contains($host, ':')) {
+            $this->host = Str::beforeLast($host, ':');
+            $this->port = (int)Str::afterLast($host, ':');
+        }
+
+        if (filter_var($this->host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            $this->host = '[' . $this->host . ']';
         }
     }
 
