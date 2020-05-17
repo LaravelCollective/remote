@@ -66,8 +66,8 @@ class SecLibGateway implements GatewayInterface
     {
         $this->auth = $auth;
         $this->files = $files;
-        $this->setHostAndPort($host);
         $this->setTimeout($timeout);
+        $this->setHostAndPort($host);
     }
 
     /**
@@ -86,7 +86,7 @@ class SecLibGateway implements GatewayInterface
 
         if (!filter_var($host, FILTER_VALIDATE_IP) && Str::contains($host, ':')) {
             $this->host = Str::beforeLast($host, ':');
-            $this->port = (int)Str::afterLast($host, ':');
+            $this->port = (int) Str::afterLast($host, ':');
         }
 
         if (filter_var($this->host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
