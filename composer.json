@@ -46,5 +46,6 @@
             "Collective\\Remote\\": "src/"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "abandoned": "spatie/ssh"
 }
