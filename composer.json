@@ -47,5 +47,5 @@
         }
     },
     "minimum-stability": "dev",
-    "abandoned": "spatie/ssh"
+    "abandoned": "rocketeers-app/laravel-ssh"
 }
