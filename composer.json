@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.2",
         "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
         "illuminate/filesystem": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
         "phpseclib/phpseclib": "^2.0"
